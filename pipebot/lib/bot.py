@@ -25,22 +25,31 @@ class Bot:
             self.commands[command_name].__call__(self.commands[command_name], args)
 
     def process_piped_cmds(self, command_string: str):
-        cmds = re.split(r"\s*\|\|\s*")
+        cmds = re.split(r"\s*\|\|\s*", command_string)
         for command in cmds:
+            if command.startswith(self.prefix):
+                command = command[len(self.prefix):]
             if self.commands.get(command.split(" ")[0], None) is None:
                 raise ValueError("That's not a command!")
         last_cmd = None
         for n, command in enumerate(cmds):
+            if command.startswith(self.prefix):
+                command = command[len(self.prefix):]
             cmd = self.commands.get(command.split(" ")[0])
             if last_cmd is not None and last_cmd.pipe_out != cmd.pipe_in:
                 return ValueError("Mismatched pipe count!")
 
         last_args = None
         for command in cmds:
-            cmd = self.commands.get(command.split(" ")[0])
+            if command.startswith(self.prefix):
+                command = command[len(self.prefix):]
+            small_args = command.split(" ")
+            cmd = self.commands.get(small_args[0])
+            small_args = small_args[1:]
             if last_args is None:
-                cmd.__call__(cmd)
-            last_args = cmd.__call__(cmd, last_args)
+                last_args = cmd.__call__(cmd, small_args)
+            else:
+                last_args = cmd.__call__(cmd, last_args + small_args)
 
     def register(self, name, function):
         if isinstance(function, Callable):
