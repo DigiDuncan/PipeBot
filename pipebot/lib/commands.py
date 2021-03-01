@@ -14,8 +14,9 @@ class Command:
 
 
 class AddCommand(Command):
-    pipe_in = 2
-    pipe_out = 1
+    def __init__(self):
+        self.pipe_in = 2
+        self.pipe_out = 1
 
     def func(args):
         sumnum = int(args[0]) + int(args[1])
@@ -24,11 +25,13 @@ class AddCommand(Command):
 
 
 class ReverseCommand(Command):
-    pipe_in = 1
-    pipe_out = 1
+    def __init__(self):
+        self.pipe_in = 1
+        self.pipe_out = 1
 
     def func(args):
-        rev = str(args[0])[::-1]
+        full = " ".join(args)
+        rev = str(full)[::-1]
         print(rev)
         return rev
 
