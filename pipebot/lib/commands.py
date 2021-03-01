@@ -21,7 +21,7 @@ class AddCommand(Command):
     def func(args):
         sumnum = int(args[0]) + int(args[1])
         print(sumnum)
-        return sumnum
+        return (sumnum)
 
 
 class ReverseCommand(Command):
@@ -33,7 +33,7 @@ class ReverseCommand(Command):
         full = " ".join(args)
         rev = str(full)[::-1]
         print(rev)
-        return rev
+        return (rev)
 
 
 def register():
